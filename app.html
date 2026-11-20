@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VECTRA Command Center | Workforce, Attendance &amp; Payroll OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Poppins', 'system-ui', 'sans-serif'] }
+          }
+        }
+      };
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#F4F5F4] text-[#111815] antialiased">
+  <a href="#main-workspace" class="skip-link no-print">Lewati ke konten utama</a>
+
+  <!-- Live Screen Reader & Toast Notifications -->
+  <div id="toast-region" aria-live="polite" aria-atomic="true" class="fixed top-20 right-4 z-[90] flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0 no-print"></div>
+
+  <!-- Application Root Shell -->
+  <div id="app-shell" class="min-h-screen flex flex-col no-print">
+    <!-- Loading Boot Screen -->
+    <div id="boot-loading" class="min-h-screen flex items-center justify-center p-6">
+      <div class="cmd-card p-6 max-w-sm w-full text-center space-y-3">
+        <div class="w-10 h-10 mx-auto rounded-md bg-[#111815] text-[#84CC16] font-bold flex items-center justify-center">V</div>
+        <h1 class="text-base font-semibold text-[#111815]">Memuat Workspace VECTRA</h1>
+        <p class="text-xs text-[#525856]">Memverifikasi sesi autentikasi, perangkat, dan data operasional...</p>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         ADMIN & SUPERVISOR COMMAND CENTER SHELL
+         ====================================================================== -->
+    <div id="admin-shell" class="hidden min-h-screen lg:flex">
+      <!-- Mobile Drawer Backdrop -->
+      <div id="sidebar-backdrop" class="hidden fixed inset-0 z-40 bg-black/60 lg:hidden" aria-hidden="true"></div>
+
+      <!-- Collapsible Left Sidebar (#111815) -->
+      <aside id="app-sidebar" aria-label="Navigasi Command Center" class="dark-surface fixed inset-y-0 left-0 z-50 w-64 -translate-x-full lg:translate-x-0 lg:static bg-[#111815] text-[#D1D5DB] border-r border-[#26332D] flex flex-col shrink-0 transition-transform duration-200">
+        <!-- Brand & Company Header -->
+        <div class="h-16 px-4 flex items-center justify-between border-b border-[#26332D] shrink-0">
+          <a href="app.html" class="flex items-center gap-3 min-w-0 text-[#FFFFFF] no-underline">
+            <div class="w-9 h-9 rounded-md bg-[#1A2420] border border-[#26332D] flex items-center justify-center shrink-0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 6L12 18L19 6" stroke="#84CC16" stroke-width="3" stroke-linecap="square"/>
+              </svg>
+            </div>
+            <div class="sidebar-label min-w-0">
+              <span class="font-bold text-sm tracking-tight block truncate text-[#FFFFFF]">VECTRA OS</span>
+              <span id="sidebar-company-name" class="text-[11px] text-[#9CA3AF] block truncate">Memuat tenant...</span>
+            </div>
+          </a>
+          <button type="button" id="mobile-sidebar-close" aria-label="Tutup menu navigasi" class="lg:hidden tap-target flex items-center justify-center text-[#D1D5DB] hover:text-[#FFFFFF] rounded-md">
+            <span class="text-lg font-semibold" aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <!-- Mode & Branch Status Strip -->
+        <div class="sidebar-meta px-4 py-2.5 border-b border-[#26332D] bg-[#1A2420] flex items-center justify-between gap-2 text-[11px]">
+          <span id="sidebar-mode-badge" class="inline-flex items-center gap-1.5 font-semibold text-[#84CC16]">
+            <span class="w-2 h-2 rounded-full bg-[#84CC16]" aria-hidden="true"></span>
+            <span>DEMO SANDBOX</span>
+          </span>
+          <span id="sidebar-branch-pill" class="text-[#D1D5DB] font-medium truncate">Semua Cabang</span>
+        </div>
+
+        <!-- Grouped Navigation -->
+        <nav class="flex-1 overflow-y-auto sidebar-scroll p-3 space-y-5" aria-label="Modul Workspace">
+          <div>
+            <p class="sidebar-group-title px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Workspace</p>
+            <div class="space-y-1">
+              <button type="button" data-nav="overview" class="nav-item w-full text-left" aria-current="page">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z"/></svg>
+                <span class="sidebar-label">Dashboard</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p class="sidebar-group-title px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Operations</p>
+            <div class="space-y-1">
+              <button type="button" data-nav="attendance" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 4H9v5l4.2 2.5 1-1.7-3.2-1.8V6z"/></svg>
+                <span class="sidebar-label flex-1">Live Attendance</span>
+              </button>
+              <button type="button" id="sidebar-kiosk-btn" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm6-2h6v6h-6V3zm2 2v2h2V5h-2zM3 11h6v6H3v-6zm2 2v2h2v-2H5zm6 0h2v2h-2v-2zm4-2h2v4h-2v-4zm-4 4h4v2h-4v-2z"/></svg>
+                <span class="sidebar-label">Kiosk QR Mode</span>
+              </button>
+              <button type="button" data-nav="schedules" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6 2v2H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2V2h-2v2H8V2H6zm10 6H4v8h12V8z"/></svg>
+                <span class="sidebar-label">Shift &amp; Jadwal</span>
+              </button>
+              <button type="button" data-nav="approvals" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z"/></svg>
+                <span class="sidebar-label flex-1">Approval Center</span>
+                <span id="nav-badge-approvals" class="nav-badge-count hidden px-1.5 py-0.5 text-[10px] font-bold rounded bg-[#D97706] text-[#FFFFFF] tabular-nums">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p class="sidebar-group-title px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Workforce</p>
+            <div class="space-y-1">
+              <button type="button" data-nav="employees" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zm8 0a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM1 16a5 5 0 0110 0v1H1v-1zm11.5 1v-1a4.5 4.5 0 00-.7-2.4A4.5 4.5 0 0119 16v1h-6.5z"/></svg>
+                <span class="sidebar-label">Master Karyawan</span>
+              </button>
+              <button type="button" data-nav="branches" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a6 6 0 00-6 6c0 4.5 6 10 6 10s6-5.5 6-10a6 6 0 00-6-6zm0 8a2 2 0 110-4 2 2 0 010 4z"/></svg>
+                <span class="sidebar-label">Cabang &amp; Geofence</span>
+              </button>
+              <button type="button" id="sidebar-fraud-btn" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2L2 5v5c0 4.4 3.4 8.3 8 9 4.6-.7 8-4.6 8-9V5l-8-3zm1 9H9V6h2v5zm0 3H9v-2h2v2z"/></svg>
+                <span class="sidebar-label flex-1">Audit Fraud Log</span>
+                <span id="nav-badge-fraud" class="nav-badge-count hidden px-1.5 py-0.5 text-[10px] font-bold rounded bg-[#DC2626] text-[#FFFFFF] tabular-nums">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p class="sidebar-group-title px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Finance</p>
+            <div class="space-y-1">
+              <button type="button" data-nav="payroll" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 4a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2H3zm7 3a3 3 0 110 6 3 3 0 010-6z"/></svg>
+                <span class="sidebar-label">Payroll Engine</span>
+              </button>
+              <button type="button" id="sidebar-ledger-btn" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M4 2h9l4 4v12a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1zm8 1.5V7h3.5L12 3.5zM6 10h8v1.5H6V10zm0 3h8v1.5H6V13z"/></svg>
+                <span class="sidebar-label">Slip Gaji &amp; Ledger Sync</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="nav-group-platform" class="hidden">
+            <p class="sidebar-group-title px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Platform</p>
+            <div class="space-y-1">
+              <button type="button" data-nav="tenants" class="nav-item w-full text-left">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 3h14v4H3V3zm0 5h14v4H3V8zm0 5h14v4H3v-4z"/></svg>
+                <span class="sidebar-label">Manajemen Tenant</span>
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Sidebar Footer Controls -->
+        <div class="p-3 border-t border-[#26332D] space-y-1.5 shrink-0">
+          <div id="sidebar-demo-role-wrap" class="md:hidden px-1 pb-1">
+            <label for="sidebar-demo-role-select" class="block text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF] mb-1">Ganti Peran Demo</label>
+            <select id="sidebar-demo-role-select" class="w-full min-h-[44px] px-2.5 rounded-md bg-[#1A2420] border border-[#26332D] text-xs font-medium text-[#FFFFFF]">
+              <option value="company_admin">HRD Admin (Rizky)</option>
+              <option value="supervisor">Supervisor JKT (Hendra)</option>
+              <option value="employee">Portal Karyawan (Dimas)</option>
+              <option value="super_admin">Super Admin (Tenant)</option>
+            </select>
+          </div>
+          <button type="button" id="sidebar-switch-portal-btn" class="nav-item w-full text-left">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm3 14a1 1 0 100-2 1 1 0 000 2z"/></svg>
+            <span class="sidebar-label">Employee Portal</span>
+          </button>
+          <button type="button" id="sidebar-collapse-btn" aria-expanded="true" class="hidden lg:flex nav-item w-full text-left">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M4 4h2v12H4V4zm4 6l5-4v8l-5-4z"/></svg>
+            <span class="sidebar-label">Collapse Sidebar</span>
+          </button>
+          <button type="button" id="reset-demo-btn" class="hidden nav-item w-full text-left text-[#A3E635]">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M4 10a6 6 0 111.8 4.2l-1.4 1.4A8 8 0 102 10H0l3 3.5L6 10H4z"/></svg>
+            <span class="sidebar-label">Reset Data Demo</span>
+          </button>
+          <button type="button" id="admin-logout-btn" class="nav-item w-full text-left text-[#FCA5A5]">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 3h7v2H5v10h5v2H3V3zm9 4l4 3-4 3v-2H8V9h4V7z"/></svg>
+            <span class="sidebar-label">Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Column -->
+      <div class="flex-1 flex flex-col min-w-0">
+        <!-- Top Utility Bar -->
+        <header class="sticky top-0 z-30 h-16 bg-[#FFFFFF] border-b border-[#E2E4E3] px-4 lg:px-6 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5 flex-1 min-w-0">
+            <button type="button" id="mobile-menu-btn" aria-label="Buka menu navigasi" class="lg:hidden btn-outline px-3 text-xs font-semibold">
+              Menu
+            </button>
+
+            <!-- Global Command Search -->
+            <div class="relative flex-1 min-w-[130px] max-w-[220px] xl:max-w-xs">
+              <label for="global-search-input" class="sr-only">Cari karyawan, NIK, atau cabang</label>
+              <input
+                id="global-search-input"
+                type="search"
+                placeholder="Cari karyawan, NIK, cabang..."
+                class="cmd-input w-full pl-3 pr-8 text-xs sm:text-sm"
+                autocomplete="off"
+              >
+              <div id="global-search-results" class="hidden absolute left-0 right-0 top-full mt-1 bg-[#FFFFFF] border border-[#111815] rounded-lg z-50 max-h-72 overflow-y-auto divide-y divide-[#E2E4E3]"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <!-- Refresh / Sync Data -->
+            <button type="button" id="sync-btn" class="btn-outline text-xs px-3 tabular-nums" title="Refresh data dan antrean offline">
+              <span id="sync-dot" class="w-2 h-2 rounded-full bg-[#84CC16]" aria-hidden="true"></span>
+              <span class="hidden sm:inline" id="sync-label">Refresh Data</span>
+            </button>
+
+            <!-- Notification Bell -->
+            <div class="relative">
+              <button type="button" id="notif-btn" aria-label="Notifikasi approval dan anomali" aria-expanded="false" class="btn-outline px-3 relative">
+                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a5 5 0 00-5 5v3.6L3.3 13A1 1 0 004 14.5h12a1 1 0 00.7-1.5L15 10.6V7a5 5 0 00-5-5zm-2 13.5a2 2 0 104 0H8z"/></svg>
+                <span id="notif-badge" class="hidden ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded bg-[#DC2626] text-[#FFFFFF] tabular-nums">0</span>
+              </button>
+              <div id="notif-popover" class="hidden absolute right-0 top-full mt-1.5 w-[min(20rem,calc(100vw-2rem))] bg-[#FFFFFF] border border-[#111815] rounded-lg z-50 p-3 space-y-2">
+                <div class="flex items-center justify-between border-b border-[#E2E4E3] pb-2">
+                  <span class="text-xs font-semibold text-[#111815]">Pusat Tindakan &amp; Anomali</span>
+                  <button type="button" id="notif-close-btn" class="text-xs text-[#525856] hover:text-[#111815] px-2 py-1">Tutup</button>
+                </div>
+                <div id="notif-list" class="space-y-2 max-h-72 overflow-y-auto text-xs"></div>
+              </div>
+            </div>
+
+            <!-- Role Switcher (Demo Mode on Tablet/Desktop) -->
+            <div id="demo-role-switcher-wrap" class="hidden md:flex items-center gap-1.5 shrink-0">
+              <label for="demo-role-select" class="hidden 2xl:inline text-[11px] font-semibold text-[#525856] whitespace-nowrap">Peran:</label>
+              <select id="demo-role-select" aria-label="Pilih peran demo" class="cmd-input text-xs py-1 pl-2.5 pr-7 min-h-[44px] w-auto min-w-[215px] whitespace-nowrap">
+                <option value="company_admin">HRD Admin (Rizky)</option>
+                <option value="supervisor">Supervisor JKT (Hendra)</option>
+                <option value="employee">Employee Portal (Dimas)</option>
+                <option value="super_admin">Super Admin (Tenant)</option>
+              </select>
+            </div>
+
+            <!-- Switcher Admin View / Employee Portal -->
+            <button type="button" id="switch-to-portal-btn" class="btn-outline text-xs px-3 hidden lg:inline-flex shrink-0">
+              Employee Portal
+            </button>
+
+            <!-- Active User Chip -->
+            <div class="hidden xl:flex items-center gap-2.5 pl-2.5 border-l border-[#E2E4E3] shrink-0">
+              <div id="topbar-avatar" class="w-9 h-9 rounded-md bg-[#111815] text-[#84CC16] font-bold text-xs flex items-center justify-center shrink-0">RP</div>
+              <div class="leading-tight whitespace-nowrap">
+                <div id="topbar-user-name" class="text-xs font-semibold text-[#111815]">Rizky Pratama</div>
+                <div id="topbar-user-role" class="text-[11px] text-[#525856]">HRD Admin</div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main Workspace Content -->
+        <main id="main-workspace" tabindex="-1" class="flex-1 p-4 lg:p-6 space-y-5 max-w-[1600px] w-full mx-auto">
+          <!-- Dark Obsidian Hero Greeting Banner -->
+          <section aria-label="Ringkasan sesi kerja" class="dark-surface bg-[#111815] text-[#FFFFFF] border border-[#26332D] rounded-lg p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="space-y-1">
+              <h1 id="hero-greeting" class="text-lg sm:text-xl font-bold text-[#FFFFFF] tracking-tight">Halo, Memuat...</h1>
+              <div class="flex flex-wrap items-center gap-2 text-xs text-[#D1D5DB]">
+                <span id="hero-shift-status" class="font-medium">Memuat status operasional...</span>
+                <span aria-hidden="true">&bull;</span>
+                <time id="hero-live-clock" class="font-semibold text-[#84CC16] tabular-nums">Memuat jam WIB...</time>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+              <button type="button" id="hero-add-emp-btn" class="btn-dark-outline text-xs sm:text-sm">
+                + Karyawan Baru
+              </button>
+              <button type="button" id="hero-kiosk-btn" class="btn-lime text-xs sm:text-sm">
+                Live Absen / Kiosk
+              </button>
+            </div>
+          </section>
+
+          <!-- Multi-Criteria Filter Bar -->
+          <section id="global-filter-bar" aria-label="Filter multi-kriteria" class="bg-[#FFFFFF] border border-[#E2E4E3] rounded-lg p-3.5">
+            <form id="filter-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-end">
+              <div class="min-w-0">
+                <label for="filter-branch" class="block text-[11px] font-semibold text-[#525856] mb-1">Cabang</label>
+                <select id="filter-branch" class="cmd-input w-full text-xs">
+                  <option value="">Semua Cabang</option>
+                </select>
+              </div>
+              <div class="min-w-0">
+                <label for="filter-dept" class="block text-[11px] font-semibold text-[#525856] mb-1">Divisi</label>
+                <select id="filter-dept" class="cmd-input w-full text-xs">
+                  <option value="">Semua Divisi</option>
+                </select>
+              </div>
+              <div class="min-w-0">
+                <label for="filter-shift" class="block text-[11px] font-semibold text-[#525856] mb-1">Shift</label>
+                <select id="filter-shift" class="cmd-input w-full text-xs">
+                  <option value="">Semua Shift</option>
+                </select>
+              </div>
+              <div class="min-w-0">
+                <label for="filter-start-date" class="block text-[11px] font-semibold text-[#525856] mb-1">Dari Tanggal</label>
+                <input id="filter-start-date" type="date" class="cmd-input w-full text-xs tabular-nums">
+              </div>
+              <div class="min-w-0">
+                <label for="filter-end-date" class="block text-[11px] font-semibold text-[#525856] mb-1">Sampai Tanggal</label>
+                <input id="filter-end-date" type="date" class="cmd-input w-full text-xs tabular-nums">
+              </div>
+              <div class="flex items-center gap-2 min-w-0">
+                <button type="submit" class="btn-obsidian text-xs px-4 flex-1">Terapkan Filter</button>
+                <button type="button" id="filter-reset-btn" class="btn-outline text-xs px-3 shrink-0">Reset</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Dynamic View Container -->
+          <div id="main-view" class="space-y-5"></div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         EMPLOYEE MOBILE-FIRST PORTAL SHELL (Centered max-w-md Container)
+         ====================================================================== -->
+    <div id="employee-portal" class="hidden min-h-screen bg-[#F4F5F4]">
+      <div class="max-w-md mx-auto bg-[#FFFFFF] min-h-screen border-x border-[#E2E4E3] flex flex-col">
+        <header class="sticky top-0 z-30 bg-[#111815] text-[#FFFFFF] border-b border-[#26332D] px-4 py-3">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-[#84CC16]" aria-hidden="true"></span>
+                <span id="portal-company-name" class="text-[11px] font-medium text-[#D1D5DB] truncate">PT Nusantara Ritel</span>
+              </div>
+              <h1 id="portal-user-title" class="text-sm font-bold text-[#FFFFFF] truncate">Portal Karyawan</h1>
+            </div>
+
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button" id="portal-back-admin-btn" class="hidden px-2.5 min-h-[44px] rounded-md border border-[#65A30D] bg-[#1A2420] text-[#84CC16] text-xs font-semibold">
+                Admin View
+              </button>
+              <button type="button" id="portal-logout-btn" class="px-2.5 min-h-[44px] rounded-md border border-[#26332D] text-[#F3F4F6] text-xs font-medium hover:bg-[#1A2420]">
+                Keluar
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main id="portal-content" tabindex="-1" class="flex-1 px-4 pt-4 portal-scroll-pad space-y-4 bg-[#F4F5F4]"></main>
+
+        <!-- Fixed Bottom Navigation Bar (4 Tabs, aligned to max-w-md container) -->
+        <nav aria-label="Menu Portal Karyawan" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-[#FFFFFF] border-t border-x border-[#E2E4E3] bottom-nav-safe">
+          <div class="grid grid-cols-4">
+            <button type="button" data-portal-tab="absen" class="portal-tab-btn min-h-[58px] flex flex-col items-center justify-center gap-0.5 text-xs font-semibold text-[#111815]">
+              <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 4H9v5l4.2 2.5 1-1.7-3.2-1.8V6z"/></svg>
+              <span>Absen</span>
+            </button>
+            <button type="button" data-portal-tab="jadwal" class="portal-tab-btn min-h-[58px] flex flex-col items-center justify-center gap-0.5 text-xs font-medium text-[#525856]">
+              <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6 2v2H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2V2h-2v2H8V2H6zm10 6H4v8h12V8z"/></svg>
+              <span>Jadwal</span>
+            </button>
+            <button type="button" data-portal-tab="pengajuan" class="portal-tab-btn min-h-[58px] flex flex-col items-center justify-center gap-0.5 text-xs font-medium text-[#525856]">
+              <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V7.4a2 2 0 00-.6-1.4l-2.4-2.4A2 2 0 0013.6 3H4zm2 5h8v2H6V8zm0 4h5v2H6v-2z"/></svg>
+              <span>Pengajuan</span>
+            </button>
+            <button type="button" data-portal-tab="slip" class="portal-tab-btn min-h-[58px] flex flex-col items-center justify-center gap-0.5 text-xs font-medium text-[#525856]">
+              <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 4a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2H3zm7 3a3 3 0 110 6 3 3 0 010-6z"/></svg>
+              <span>Slip Gaji</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accessible Modal Container -->
+  <div id="modal-root" class="no-print"></div>
+
+  <!-- Dedicated Print Target for Slip Gaji & Rekap Absensi -->
+  <section id="print-sheet" aria-label="Dokumen Cetak"></section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+  <script type="module" src="app.js"></script>
+  <script>
+    (function () {
+      function showBootRecovery(title, detail) {
+        var el = document.getElementById('boot-loading');
+        if (!el || el.classList.contains('hidden')) return;
+        el.innerHTML =
+          '<div class="cmd-card p-6 max-w-md w-full space-y-3 border-[#DC2626] text-left">' +
+            '<div class="flex items-center gap-2">' +
+              '<span class="w-2.5 h-2.5 rounded-full bg-[#DC2626]" aria-hidden="true"></span>' +
+              '<h1 class="text-sm font-bold text-[#991B1B]">' + title + '</h1>' +
+            '</div>' +
+            '<p class="text-xs text-[#4B5563] leading-relaxed">' + detail + '</p>' +
+            '<div class="flex flex-wrap gap-2 pt-1">' +
+              '<a href="app.html?mode=demo&amp;role=company_admin" class="btn-lime text-xs flex-1">Buka Mode Demo</a>' +
+              '<a href="index.html" class="btn-obsidian text-xs flex-1">Kembali ke Login</a>' +
+              '<button type="button" onclick="window.location.reload()" class="btn-outline text-xs">Muat Ulang</button>' +
+            '</div>' +
+          '</div>';
+      }
+
+      if (window.location.protocol === 'file:') {
+        showBootRecovery(
+          'Halaman Dibuka Langsung via file:///',
+          'Browser modern memblokir ES Modules (app.js) pada protokol file:///. Jalankan local server di folder proyek (misal: python -m http.server 8080 atau Live Server) lalu buka http://localhost:8080/app.html?mode=demo.'
+        );
+        return;
+      }
+
+      setTimeout(function () {
+        if (!window.__VECTRA_APP_BOOTED__) {
+          showBootRecovery(
+            'Modul Workspace Gagal Dimuat',
+            'Skrip app.js tidak merespons dalam 3,5 detik. Periksa tab Console / Network di DevTools atau pastikan seluruh file modul JS tersedia pada server lokal Anda.'
+          );
+        }
+      }, 3500);
+    })();
+  </script>
+</body>
+</html>

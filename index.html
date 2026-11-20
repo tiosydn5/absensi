@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VECTRA | Enterprise Workforce, Anti-Fraud Attendance &amp; Payroll OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Poppins', 'system-ui', 'sans-serif'] }
+          }
+        }
+      };
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#F4F5F4] text-[#111815] antialiased">
+  <a href="#main-content" class="skip-link">Lewati ke form login</a>
+
+  <main id="main-content" tabindex="-1" class="min-h-screen grid grid-cols-1 lg:grid-cols-12">
+    <!-- KOLOM KIRI: AUTH & WORKSPACE GATEWAY -->
+    <section class="lg:col-span-5 bg-[#FFFFFF] p-6 sm:p-8 lg:p-12 flex flex-col justify-between gap-8 border-b lg:border-b-0 lg:border-r border-[#E2E4E3]">
+      <!-- Header Brand -->
+      <header class="flex items-center justify-between gap-4">
+        <a href="index.html" class="flex items-center gap-3 text-[#111815] no-underline tap-target">
+          <div class="w-10 h-10 rounded-md bg-[#111815] flex items-center justify-center shrink-0 border border-[#26332D]">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 6L12 18L19 6" stroke="#84CC16" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"/>
+            </svg>
+          </div>
+          <div class="leading-tight">
+            <span class="font-bold tracking-tight text-base text-[#111815] block">VECTRA</span>
+            <span class="text-xs text-[#525856] block">Workforce &amp; Payroll OS</span>
+          </div>
+        </a>
+      </header>
+
+      <!-- Form Login, Daftar & Demo Switcher -->
+      <div class="w-full max-w-md mx-auto lg:mx-0 space-y-5">
+        <div class="space-y-1">
+          <h2 id="auth-heading" class="text-xl font-bold text-[#111815] tracking-tight">Masuk ke Workspace</h2>
+          <p id="auth-subheading" class="text-xs text-[#525856]">Akses terenkripsi berbasis perusahaan untuk HRD, Supervisor, dan Karyawan.</p>
+        </div>
+
+        <!-- Mode Auth Switcher (Masuk / Daftar Perusahaan / Gabung Undangan) -->
+        <div role="tablist" aria-label="Pilih mode autentikasi" class="grid grid-cols-3 gap-1.5 p-1 bg-[#F4F5F4] border border-[#E2E4E3] rounded-lg">
+          <button type="button" id="tab-login-btn" role="tab" aria-selected="true" aria-controls="login-form" class="min-h-[44px] px-2 py-2 rounded-md text-xs font-semibold bg-[#111815] text-[#FFFFFF] transition-colors">
+            Masuk Akun
+          </button>
+          <button type="button" id="tab-signup-btn" role="tab" aria-selected="false" aria-controls="signup-form" class="min-h-[44px] px-2 py-2 rounded-md text-xs font-semibold text-[#4B5563] hover:text-[#111815] transition-colors">
+            Daftar Perusahaan
+          </button>
+          <button type="button" id="tab-invite-btn" role="tab" aria-selected="false" aria-controls="invite-form" class="min-h-[44px] px-2 py-2 rounded-md text-xs font-semibold text-[#4B5563] hover:text-[#111815] transition-colors">
+            Gabung Undangan
+          </button>
+        </div>
+
+        <div id="login-alert" role="alert" aria-live="assertive" class="hidden p-3 rounded-lg border text-xs font-medium"></div>
+
+        <form id="login-form" class="space-y-4" novalidate>
+          <div>
+            <label for="login-email" class="block text-xs font-semibold text-[#111815] mb-1.5">Email Perusahaan</label>
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="nama@perusahaan.co.id"
+              class="w-full min-h-[44px] px-3 py-2 text-sm bg-[#FFFFFF] border border-[#D4D7D5] rounded-lg text-[#111815] focus:border-[#111815]"
+            >
+          </div>
+
+          <div>
+            <label for="login-password" class="block text-xs font-semibold text-[#111815] mb-1.5">Kata Sandi</label>
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Masukkan kata sandi"
+              class="w-full min-h-[44px] px-3 py-2 text-sm bg-[#FFFFFF] border border-[#D4D7D5] rounded-lg text-[#111815] focus:border-[#111815]"
+            >
+          </div>
+
+          <button type="submit" id="login-submit-btn" class="w-full min-h-[44px] px-4 py-2.5 rounded-md bg-[#111815] text-[#FFFFFF] hover:bg-[#1E2924] text-sm font-semibold transition-colors">
+            Masuk ke Command Center
+          </button>
+        </form>
+
+        <!-- Form Pendaftaran Workspace Baru (Perusahaan / HRD Owner) -->
+        <form id="signup-form" class="hidden space-y-3.5" novalidate>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="reg-name" class="block text-xs font-semibold text-[#111815] mb-1.5">Nama Lengkap</label>
+              <input
+                id="reg-name"
+                name="full_name"
+                type="text"
+                required
+                placeholder="Nama HRD / Owner"
+                class="w-full min-h-[44px] px-3 py-2 text-sm bg-[#FFFFFF] border border-[#D4D7D5] rounded-lg text-[#111815] focus:border-[#111815]"
+              >
+            </div>
+            <div>
+              <label for="reg-company" class="block text-xs font-semibold text-[#111815] mb-1.5">Nama Perusahaan</label>
+              <input
+                id="reg-company"
+                name="company_name"
+                type="text"
+                required
+                placeholder="PT Maju Jaya"
+                class="w-full min-h-[44px] px-3 py-2 text-sm bg-[#FFFFFF] border border-[#D4D7D5] rounded-lg text-[#111815] focus:border-[#111815]"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label for="reg-email" class="block text-xs font-semibold text-[#111815] mb-1.5">Email Admin</label>
+            <input
+              id="reg-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="admin@perusahaan.co.id"
+              class="w-full min-h-[44px] px-3 py-2 text-sm bg-[#FFFFFF] border border-[#D4D7D5] rounded-lg text-[#111815] focus:border-[#111815]"
+            >
+          </div>
+
+          <div>
+            <label for="reg-password" class="block text-xs font-semibold text-[#111815] mb-1.5">Kata Sandi</label>
+            <input
+              id="reg-password"
+              name="password"
+              type="password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+              placeholder="Minimal 6 karakter"
+              class="w-full min-h-[44px] px-3 py-2 text-sm bg-[#FFFFFF] border border-[#D4D7D5] rounded-lg text-[#111815] focus:border-[#111815]"
+            >
+          </div>
+
+          <button type="submit" id="reg-submit-btn" class="w-full min-h-[44px] px-4 py-2.5 rounded-md bg-[#84CC16] hover:bg-[#A3E635] border border-[#65A30D] text-[#111815] text-sm font-semibold transition-colors">
+            Buat Akun &amp; Masuk Langsung
+          </button>
+        </form>
+
+        <!-- Form Aktivasi Karyawan via Undangan HRD (Self-Onboarding) -->
+        <form id="invite-form" class="hidden space-y-3.5" novalidate>
+          <div>
+            <label for="inv-token" class="block text-xs font-semibold text-[#111815] mb-1.5">Kode Undangan HRD</label>
+            <div class="flex gap-2">
+              <input
+                id="inv-token"
+                name="invite_token"
+                type="text"
+                required
+                placeholder="VCT-XXXXXXXXXXXXXXXX"
+                class="flex-1 min-h-[44px] px-3 py-2 text-xs font-mono uppercase bg-[#FFFFFF] border border-[#D4D7D5] rounded-lg text-[#111815] focus:border-[#111815]"
+              >
+              <button type="button" id="inv-lookup-btn" class="min-h-[44px] px-3 rounded-lg bg-[#FFFFFF] hover:bg-[#F4F5F4] border border-[#B5BCB8] text-xs font-semibold text-[#111815]">
+                Cek Kode
+              </button>
+            </div>
+          </div>
+
+          <div id="inv-preview-card" class="hidden p-3.5 rounded-lg bg-[#ECFCCB] border border-[#BEF264] space-y-1 text-xs text-[#111815]">
+            <div class="font-bold text-[#3F6212]" id="inv-prev-company">-</div>
+            <div id="inv-prev-details" class="text-[11px] text-[#365314]">-</div>
+          </div>
+
+          <div>
+            <label for="inv-email" class="block text-xs font-semibold text-[#111815] mb-1.5">Email Terdaftar di Undangan</label>
+            <input
+              id="inv-email"
+              name="email"
+              type="email"
+              readonly
+              placeholder="Terisi otomatis setelah cek kode undangan"
+              class="w-full min-h-[44px] px-3 py-2 text-sm bg-[#F4F5F4] border border-[#D4D7D5] rounded-lg text-[#111815]"
+            >
+          </div>
+
+          <div>
+            <label for="inv-password" class="block text-xs font-semibold text-[#111815] mb-1.5">Buat Kata Sandi Akun Baru</label>
+            <input
+              id="inv-password"
+              name="password"
+              type="password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+              placeholder="Minimal 6 karakter"
+              class="w-full min-h-[44px] px-3 py-2 text-sm bg-[#FFFFFF] border border-[#D4D7D5] rounded-lg text-[#111815] focus:border-[#111815]"
+            >
+          </div>
+
+          <button type="submit" id="inv-submit-btn" disabled class="w-full min-h-[44px] px-4 py-2.5 rounded-md bg-[#84CC16] hover:bg-[#A3E635] border border-[#65A30D] text-[#111815] text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            Buat Akun &amp; Gabung Perusahaan
+          </button>
+        </form>
+
+        <div class="flex items-center justify-between gap-2 text-xs">
+          <button type="button" id="toggle-sb-config" class="text-[#3F6212] font-semibold hover:underline py-2">
+            Pengaturan Project Supabase (Override)
+          </button>
+          <a href="app.html?mode=demo&amp;role=company_admin" class="text-[#111815] font-medium hover:underline py-2">
+            Masuk Mode Demo &rarr;
+          </a>
+        </div>
+
+        <!-- Collapsible Supabase Credentials Override Drawer -->
+        <form id="sb-config-form" class="hidden space-y-3 bg-[#F4F5F4] border border-[#E2E4E3] rounded-lg p-4">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-bold text-[#111815]">Konfigurasi Kredensial Tenant</span>
+            <span id="sb-override-state" class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FFFBEB] text-[#92400E] border border-[#F59E0B]">Mode Demo</span>
+          </div>
+          <p class="text-[11px] text-[#4B5563]">
+            Project Aktif: <code id="sb-project-id" class="font-semibold text-[#111815]">Belum Dikonfigurasi</code>. Masukkan URL &amp; Publishable/Anon Key project Supabase Anda untuk mengaktifkan Mode Live.
+          </p>
+          <div>
+            <label for="sb-url" class="block text-xs font-semibold text-[#111815] mb-1">Supabase Project URL</label>
+            <input id="sb-url" type="url" placeholder="https://your-project-id.supabase.co" class="cmd-input w-full text-xs">
+          </div>
+          <div>
+            <label for="sb-key" class="block text-xs font-semibold text-[#111815] mb-1">Publishable / Anon Key</label>
+            <input id="sb-key" type="text" placeholder="sb_publishable_... atau eyJ..." class="cmd-input w-full text-xs font-mono">
+          </div>
+          <div class="text-[11px] text-[#525856] break-all">
+            REST API: <code id="sb-rest-url" class="text-[#111815]">-</code>
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" class="btn-lime text-xs flex-1">Simpan Override</button>
+            <button type="button" id="sb-clear-btn" class="btn-outline text-xs">Reset Default</button>
+          </div>
+        </form>
+
+        <!-- Panel Akses Instan Demo (?mode=demo) -->
+        <div class="bg-[#F4F5F4] border border-[#E2E4E3] rounded-lg p-4 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-semibold text-[#111815]">Akses Instan Simulasi (?mode=demo)</span>
+            <span class="text-[11px] font-medium text-[#525856]">18 Karyawan • 2 Cabang</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <a href="app.html?mode=demo&amp;role=company_admin" class="min-h-[44px] px-3 py-2 rounded-md bg-[#84CC16] hover:bg-[#A3E635] border border-[#65A30D] text-[#111815] text-xs font-semibold flex items-center justify-center text-center">
+              Live Demo (Full)
+            </a>
+            <button type="button" data-demo-role="company_admin" class="demo-role-btn min-h-[44px] px-3 py-2 rounded-md bg-[#111815] hover:bg-[#1E2924] text-[#FFFFFF] text-xs font-semibold flex items-center justify-center text-center">
+              HRD Admin
+            </button>
+            <button type="button" data-demo-role="supervisor" class="demo-role-btn min-h-[44px] px-3 py-2 rounded-md bg-[#FFFFFF] hover:bg-[#F9FAFA] border border-[#D4D7D5] text-[#111815] text-xs font-semibold flex items-center justify-center text-center">
+              Supervisor
+            </button>
+            <button type="button" data-demo-role="employee" class="demo-role-btn min-h-[44px] px-3 py-2 rounded-md bg-[#FFFFFF] hover:bg-[#F9FAFA] border border-[#D4D7D5] text-[#111815] text-xs font-semibold flex items-center justify-center text-center">
+              Portal Karyawan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Kiri -->
+      <footer class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#E2E4E3] text-xs">
+        <span id="conn-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border">
+          Memeriksa koneksi...
+        </span>
+        <span class="text-[#525856] font-medium tabular-nums">VECTRA OS v2.4 • Kronos Ledger Ready</span>
+      </footer>
+    </section>
+
+    <!-- KOLOM KANAN: COMMAND CAPABILITIES SHOWCASE (#111815) -->
+    <section class="lg:col-span-7 bg-[#111815] text-[#FFFFFF] p-6 sm:p-8 lg:p-12 flex flex-col justify-between gap-8 dark-surface">
+      <!-- Top Status Strip -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#1A2420] border border-[#26332D] text-[11px] font-semibold tracking-wider text-[#84CC16] uppercase">
+          <span class="w-2 h-2 rounded-full bg-[#84CC16]" aria-hidden="true"></span>
+          POSTGRESQL NOW() AUTHORITY
+        </span>
+        <time id="hero-clock-wib" class="text-xs font-semibold text-[#D1D5DB] tabular-nums">
+          Memuat waktu server WIB...
+        </time>
+      </div>
+
+      <!-- Headline & 2x2 Capability Grid -->
+      <div class="space-y-6 my-auto">
+        <h1 class="text-2xl sm:text-3xl lg:text-[2.15rem] font-bold tracking-tight text-[#FFFFFF] leading-[1.24] max-w-2xl">
+          Satu Command Center untuk Absensi Anti-Fraud, Shift Lintas Hari, dan Payroll Otomatis.
+        </h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <article class="bg-[#1A2420] border border-[#26332D] rounded-lg p-5 space-y-2.5">
+            <div class="w-9 h-9 rounded-md bg-[#84CC16] text-[#111815] flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a6 6 0 00-6 6c0 4.5 6 10 6 10s6-5.5 6-10a6 6 0 00-6-6zm0 8a2 2 0 110-4 2 2 0 010 4z"/></svg>
+            </div>
+            <h2 class="text-sm font-semibold text-[#FFFFFF]">Geofencing &amp; Anti-Spoofing</h2>
+            <p class="text-xs text-[#D1D5DB] leading-relaxed">
+              Validasi Haversine server-side, deteksi kecepatan mustahil, &amp; device binding.
+            </p>
+          </article>
+
+          <article class="bg-[#1A2420] border border-[#26332D] rounded-lg p-5 space-y-2.5">
+            <div class="w-9 h-9 rounded-md bg-[#84CC16] text-[#111815] flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2.6l-1.2-1.5A1 1 0 0011.4 3H8.6a1 1 0 00-.8.5L6.6 5H4zm6 9a3 3 0 110-6 3 3 0 010 6z"/></svg>
+            </div>
+            <h2 class="text-sm font-semibold text-[#FFFFFF]">Live Camera + Watermark</h2>
+            <p class="text-xs text-[#D1D5DB] leading-relaxed">
+              Tolak galeri, injeksi metadata koordinat &amp; jam server langsung ke piksel foto.
+            </p>
+          </article>
+
+          <article class="bg-[#1A2420] border border-[#26332D] rounded-lg p-5 space-y-2.5">
+            <div class="w-9 h-9 rounded-md bg-[#84CC16] text-[#111815] flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 4H9v5l4.2 2.5 1-1.7-3.2-1.8V6z"/></svg>
+            </div>
+            <h2 class="text-sm font-semibold text-[#FFFFFF]">Cross-Day Shift &amp; Approval</h2>
+            <p class="text-xs text-[#D1D5DB] leading-relaxed">
+              Dukung shift malam (22:00-06:00), WFO/WFH/Dinas Luar, &amp; approval 2 tahap.
+            </p>
+          </article>
+
+          <article class="bg-[#1A2420] border border-[#26332D] rounded-lg p-5 space-y-2.5">
+            <div class="w-9 h-9 rounded-md bg-[#84CC16] text-[#111815] flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 4a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2H3zm7 3a3 3 0 110 6 3 3 0 010-6z"/></svg>
+            </div>
+            <h2 class="text-sm font-semibold text-[#FFFFFF]">Auto Payroll &amp; Kronos Sync</h2>
+            <p class="text-xs text-[#D1D5DB] leading-relaxed">
+              Kalkulasi lembur 1.5x/2x, cetak slip gaji A4/A5, &amp; batch posting ke ledger.
+            </p>
+          </article>
+        </div>
+      </div>
+
+      <!-- Bottom Strip -->
+      <div class="pt-4 border-t border-[#26332D] flex flex-wrap items-center justify-between gap-3 text-xs text-[#D1D5DB]">
+        <span class="font-medium tracking-wide">Absensi GPS &bull; Kiosk QR 15s &bull; Shift &bull; Cuti &bull; Payroll &bull; Ledger Sync</span>
+        <span class="text-[#84CC16] font-semibold">Multi-Tenant RLS</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+  <script>
+    (function () {
+      var clockEl = document.getElementById('hero-clock-wib');
+      var statusBadge = document.getElementById('conn-status-badge');
+      var alertBox = document.getElementById('login-alert');
+
+      function formatFallbackWib() {
+        try {
+          return new Intl.DateTimeFormat('id-ID', {
+            timeZone: 'Asia/Jakarta',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          }).format(new Date()) + ' WIB';
+        } catch (e) {
+          return new Date().toLocaleTimeString('id-ID') + ' WIB';
+        }
+      }
+
+      if (clockEl) clockEl.textContent = formatFallbackWib();
+      var fallbackClockTimer = setInterval(function () {
+        if (window.__VECTRA_INDEX_BOOTED__) {
+          clearInterval(fallbackClockTimer);
+          return;
+        }
+        if (clockEl) clockEl.textContent = formatFallbackWib();
+      }, 1000);
+
+      if (window.location.protocol === 'file:') {
+        if (statusBadge) {
+          statusBadge.textContent = 'Perlu HTTP Local Server';
+          statusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border bg-[#FEF2F2] text-[#991B1B] border-[#FCA5A5]';
+        }
+        if (alertBox) {
+          alertBox.textContent = 'Browser memblokir modul JavaScript jika dibuka langsung via file:///. Jalankan server lokal di folder proyek (contoh: python -m http.server 8080) lalu buka http://localhost:8080/index.html.';
+          alertBox.className = 'p-3 rounded-lg border text-xs font-medium bg-[#FFFBEB] text-[#92400E] border-[#F59E0B]';
+          alertBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      setTimeout(function () {
+        if (window.__VECTRA_INDEX_BOOTED__) return;
+        if (statusBadge) {
+          statusBadge.textContent = 'Mode Fallback Aktif';
+          statusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border bg-[#FEF2F2] text-[#991B1B] border-[#FCA5A5]';
+        }
+        if (alertBox) {
+          alertBox.textContent = 'Modul inisialisasi gagal dimuat penuh. Muat ulang halaman atau klik Live Demo (Full).';
+          alertBox.className = 'p-3 rounded-lg border text-xs font-medium bg-[#FEF2F2] text-[#991B1B] border-[#FCA5A5]';
+          alertBox.classList.remove('hidden');
+        }
+      }, 2800);
+    })();
+  </script>
+  <script type="module">
+    import {
+      VECTRA_CONFIG,
+      hasCustomSupabaseOverride,
+      isDemoMode,
+      isSupabaseConfigured,
+      saveSupabaseCredentials,
+      clearSupabaseCredentials,
+      createDataClient
+    } from './config.js';
+    import { formatWibDateTime } from './anti-fraud.js';
+
+    window.__VECTRA_INDEX_BOOTED__ = true;
+
+    const clockEl = document.getElementById('hero-clock-wib');
+    const statusBadge = document.getElementById('conn-status-badge');
+    const alertBox = document.getElementById('login-alert');
+
+    function showAlert(msg, isError = true) {
+      if (!alertBox) return;
+      alertBox.textContent = msg;
+      alertBox.className = isError
+        ? 'p-3 rounded-lg border text-xs font-medium bg-[#FEF2F2] text-[#991B1B] border-[#FCA5A5]'
+        : 'p-3 rounded-lg border text-xs font-medium bg-[#ECFCCB] text-[#3F6212] border-[#BEF264]';
+      alertBox.classList.remove('hidden');
+    }
+
+    function hideAlert() {
+      if (alertBox) alertBox.classList.add('hidden');
+    }
+
+    try {
+      const updateClock = () => {
+        if (clockEl) clockEl.textContent = formatWibDateTime(new Date());
+      };
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      const isOverride = hasCustomSupabaseOverride();
+      if (statusBadge) {
+        if (isDemoMode()) {
+          statusBadge.textContent = 'Mode Demo Aktif';
+          statusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border bg-[#FFFBEB] text-[#92400E] border-[#F59E0B]';
+        } else if (isSupabaseConfigured()) {
+          statusBadge.textContent = isOverride
+            ? `Supabase Override (${VECTRA_CONFIG.PROJECT_ID})`
+            : `Supabase Live Siap (${VECTRA_CONFIG.PROJECT_ID})`;
+          statusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border bg-[#ECFCCB] text-[#3F6212] border-[#BEF264]';
+        } else {
+          statusBadge.textContent = 'Mode Demo Aktif';
+          statusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border bg-[#FFFBEB] text-[#92400E] border-[#F59E0B]';
+        }
+      }
+
+      document.querySelectorAll('.demo-role-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const role = btn.getAttribute('data-demo-role');
+          window.location.href = `app.html?mode=demo&role=${encodeURIComponent(role)}`;
+        });
+      });
+
+      // Auth Mode Tabs (Login vs Daftar Perusahaan vs Gabung Undangan)
+      const tabLogin = document.getElementById('tab-login-btn');
+      const tabSignup = document.getElementById('tab-signup-btn');
+      const tabInvite = document.getElementById('tab-invite-btn');
+      const loginForm = document.getElementById('login-form');
+      const signupForm = document.getElementById('signup-form');
+      const inviteForm = document.getElementById('invite-form');
+      const authHeading = document.getElementById('auth-heading');
+      const authSubheading = document.getElementById('auth-subheading');
+
+      let activeInviteData = null;
+
+      function switchAuthTab(mode) {
+        hideAlert();
+        const tabs = [
+          { key: 'login', btn: tabLogin, form: loginForm },
+          { key: 'signup', btn: tabSignup, form: signupForm },
+          { key: 'invite', btn: tabInvite, form: inviteForm }
+        ];
+        for (const t of tabs) {
+          const active = t.key === mode;
+          t.btn.setAttribute('aria-selected', String(active));
+          t.btn.className = `min-h-[44px] px-2 py-2 rounded-md text-xs font-semibold transition-colors ${active ? 'bg-[#111815] text-[#FFFFFF]' : 'text-[#4B5563] hover:text-[#111815]'}`;
+          t.form.classList.toggle('hidden', !active);
+        }
+        if (mode === 'login') {
+          authHeading.textContent = 'Masuk ke Workspace';
+          authSubheading.textContent = 'Akses terenkripsi berbasis perusahaan untuk HRD, Supervisor, dan Karyawan.';
+        } else if (mode === 'signup') {
+          authHeading.textContent = 'Buat Workspace Perusahaan';
+          authSubheading.textContent = 'Daftar langsung sebagai HRD / Pemilik perusahaan baru.';
+        } else {
+          authHeading.textContent = 'Aktivasi Akun Undangan Karyawan';
+          authSubheading.textContent = 'Masukkan kode undangan dari HRD untuk membuat password & bergabung ke perusahaan.';
+        }
+      }
+
+      tabLogin.addEventListener('click', () => switchAuthTab('login'));
+      tabSignup.addEventListener('click', () => switchAuthTab('signup'));
+      tabInvite.addEventListener('click', () => switchAuthTab('invite'));
+
+      // Supabase Override Drawer
+      const sbToggle = document.getElementById('toggle-sb-config');
+      const sbForm = document.getElementById('sb-config-form');
+      const sbUrlInput = document.getElementById('sb-url');
+      const sbKeyInput = document.getElementById('sb-key');
+      const sbOverrideBadge = document.getElementById('sb-override-state');
+      const sbProjectIdEl = document.getElementById('sb-project-id');
+      const sbRestUrlEl = document.getElementById('sb-rest-url');
+
+      const configured = isSupabaseConfigured();
+      if (configured) {
+        sbUrlInput.value = VECTRA_CONFIG.SUPABASE_URL;
+        sbKeyInput.value = VECTRA_CONFIG.SUPABASE_ANON_KEY;
+      }
+      if (sbProjectIdEl) {
+        sbProjectIdEl.textContent = configured && VECTRA_CONFIG.PROJECT_ID
+          ? VECTRA_CONFIG.PROJECT_ID
+          : 'Belum Dikonfigurasi (Mode Demo)';
+      }
+      if (sbRestUrlEl) {
+        sbRestUrlEl.textContent = configured ? VECTRA_CONFIG.REST_API_URL : '-';
+      }
+      if (sbOverrideBadge) {
+        if (isOverride) {
+          sbOverrideBadge.textContent = 'Override Klien Aktif';
+          sbOverrideBadge.className = 'px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F0F9FF] text-[#0284C7] border border-[#BAE6FD]';
+        } else if (configured) {
+          sbOverrideBadge.textContent = 'Live Siap';
+          sbOverrideBadge.className = 'px-2 py-0.5 rounded text-[10px] font-semibold bg-[#ECFCCB] text-[#3F6212] border border-[#BEF264]';
+        } else {
+          sbOverrideBadge.textContent = 'Mode Demo';
+          sbOverrideBadge.className = 'px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FFFBEB] text-[#92400E] border border-[#F59E0B]';
+        }
+      }
+
+      sbToggle.addEventListener('click', () => {
+        sbForm.classList.toggle('hidden');
+      });
+
+      sbForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!sbUrlInput.value.trim() || !sbKeyInput.value.trim()) {
+          showAlert('Isi Project URL dan Publishable/Anon Key Supabase terlebih dahulu.', true);
+          return;
+        }
+        try {
+          saveSupabaseCredentials(sbUrlInput.value, sbKeyInput.value);
+          window.location.reload();
+        } catch (err) {
+          showAlert(err.message || 'Kredensial Supabase tidak valid.', true);
+        }
+      });
+
+      document.getElementById('sb-clear-btn').addEventListener('click', () => {
+        clearSupabaseCredentials();
+        window.location.reload();
+      });
+
+      // Employee Invite Preview & Activation Helpers
+      const invTokenInput = document.getElementById('inv-token');
+      const invLookupBtn = document.getElementById('inv-lookup-btn');
+      const invPreviewCard = document.getElementById('inv-preview-card');
+      const invPrevCompany = document.getElementById('inv-prev-company');
+      const invPrevDetails = document.getElementById('inv-prev-details');
+      const invEmailInput = document.getElementById('inv-email');
+      const invSubmitBtn = document.getElementById('inv-submit-btn');
+
+      async function lookupInviteCode(rawToken) {
+        const token = String(rawToken || '').trim().toUpperCase();
+        activeInviteData = null;
+        invPreviewCard.classList.add('hidden');
+        invEmailInput.value = '';
+        invSubmitBtn.disabled = true;
+
+        if (!token) {
+          showAlert('Masukkan kode undangan terlebih dahulu.', true);
+          return;
+        }
+        if (!isSupabaseConfigured() && !isDemoMode()) {
+          showAlert('Butuh koneksi Supabase Live untuk mengecek kode undangan. Atur Project URL & Publishable/Anon Key pada panel di bawah.', true);
+          return;
+        }
+
+        invLookupBtn.disabled = true;
+        invLookupBtn.textContent = 'Mengecek...';
+        hideAlert();
+        try {
+          const client = createDataClient();
+          const res = await client.previewEmployeeInvite(token);
+          if (!res?.valid) {
+            showAlert(res?.reason || 'Kode undangan tidak valid atau kedaluwarsa.', true);
+            return;
+          }
+          activeInviteData = { ...res, token };
+          try { sessionStorage.setItem('vectra_pending_invite', token); } catch {}
+          invPrevCompany.textContent = `${res.company_name} (${res.branch_name})`;
+          invPrevDetails.textContent = `${res.full_name} • ${res.employee_code} • ${res.position} (${res.department})`;
+          invPreviewCard.classList.remove('hidden');
+          invEmailInput.value = res.email;
+          invSubmitBtn.disabled = false;
+        } catch (err) {
+          showAlert(err.message || 'Gagal memeriksa kode undangan.', true);
+        } finally {
+          invLookupBtn.disabled = false;
+          invLookupBtn.textContent = 'Cek Kode';
+        }
+      }
+
+      invLookupBtn.addEventListener('click', () => lookupInviteCode(invTokenInput.value));
+
+      const urlInviteToken = (new URLSearchParams(window.location.search).get('invite') || '').trim().toUpperCase();
+      if (urlInviteToken) {
+        switchAuthTab('invite');
+        invTokenInput.value = urlInviteToken;
+        lookupInviteCode(urlInviteToken);
+      }
+
+      const submitBtn = document.getElementById('login-submit-btn');
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        if (!email || !password) {
+          showAlert('Email perusahaan dan kata sandi wajib diisi.', true);
+          return;
+        }
+
+        if (!isSupabaseConfigured()) {
+          showAlert('Supabase Live belum dikonfigurasi. Atur Project URL & Publishable/Anon Key atau gunakan Mode Demo.', true);
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Memverifikasi sesi...';
+        try {
+          let pendingInvite = urlInviteToken || invTokenInput.value.trim().toUpperCase();
+          if (!pendingInvite) {
+            try { pendingInvite = sessionStorage.getItem('vectra_pending_invite') || ''; } catch {}
+          }
+          const client = createDataClient();
+          const loginRes = await client.signInWithEmail(email, password, pendingInvite);
+          if (loginRes?.profile) {
+            try { sessionStorage.removeItem('vectra_pending_invite'); } catch {}
+          }
+          window.location.href = 'app.html?mode=live';
+        } catch (err) {
+          showAlert(err.message || 'Gagal login ke Supabase. Periksa email atau kata sandi.', true);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Masuk ke Command Center';
+        }
+      });
+
+      const regBtn = document.getElementById('reg-submit-btn');
+      signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById('reg-name').value.trim();
+        const companyName = document.getElementById('reg-company').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const password = document.getElementById('reg-password').value;
+
+        if (!fullName || !companyName || !email || password.length < 6) {
+          showAlert('Lengkapi nama, perusahaan, email, dan kata sandi (minimal 6 karakter).', true);
+          return;
+        }
+
+        if (!isSupabaseConfigured()) {
+          showAlert('Pendaftaran workspace membutuhkan koneksi Supabase Live. Atur URL & Publishable/Anon Key pada pengaturan di bawah atau gunakan Mode Demo.', true);
+          return;
+        }
+
+        regBtn.disabled = true;
+        regBtn.textContent = 'Menyiapkan workspace...';
+        try {
+          const client = createDataClient();
+          const res = await client.signUpWorkspace({ fullName, companyName, email, password });
+          if (res.needsEmailConfirmation) {
+            showAlert('Akun berhasil dibuat. Periksa kotak masuk email untuk konfirmasi sebelum masuk.', false);
+            return;
+          }
+          window.location.href = 'app.html?mode=live';
+        } catch (err) {
+          showAlert(err.message || 'Gagal mendaftarkan workspace baru.', true);
+        } finally {
+          regBtn.disabled = false;
+          regBtn.textContent = 'Buat Akun & Masuk Langsung';
+        }
+      });
+
+      inviteForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = invTokenInput.value.trim().toUpperCase();
+        const password = document.getElementById('inv-password').value;
+        if (!activeInviteData || activeInviteData.token !== token) {
+          showAlert('Klik "Cek Kode" terlebih dahulu untuk memvalidasi kode undangan Anda.', true);
+          return;
+        }
+        if (password.length < 6) {
+          showAlert('Kata sandi minimal 6 karakter.', true);
+          return;
+        }
+        if (!isSupabaseConfigured() && !isDemoMode()) {
+          showAlert('Aktivasi undangan membutuhkan koneksi Supabase Live atau Mode Demo.', true);
+          return;
+        }
+
+        invSubmitBtn.disabled = true;
+        invSubmitBtn.textContent = 'Mengaktifkan akun...';
+        try {
+          const client = createDataClient();
+          const res = await client.signUpWithInvite({
+            inviteToken: token,
+            fullName: activeInviteData.full_name,
+            email: activeInviteData.email,
+            password
+          });
+          if (res.needsEmailConfirmation) {
+            try { sessionStorage.setItem('vectra_pending_invite', token); } catch {}
+            showAlert('Akun dibuat! Periksa inbox email untuk konfirmasi link, lalu login di tab Masuk Akun agar otomatis bergabung.', false);
+            return;
+          }
+          try { sessionStorage.removeItem('vectra_pending_invite'); } catch {}
+          if (client.mode === 'demo') {
+            window.location.href = 'app.html?mode=demo';
+          } else {
+            window.location.href = 'app.html?mode=live';
+          }
+        } catch (err) {
+          const msg = err?.message || 'Gagal mengaktifkan undangan.';
+          if (/already registered|already exists/i.test(msg)) {
+            document.getElementById('login-email').value = activeInviteData.email;
+            showAlert('Email ini sudah punya akun Supabase. Silakan masuk di tab "Masuk Akun" dengan password Anda—undangan akan otomatis diproses.', true);
+          } else {
+            showAlert(msg, true);
+          }
+        } finally {
+          invSubmitBtn.disabled = false;
+          invSubmitBtn.textContent = 'Buat Akun & Gabung Perusahaan';
+        }
+      });
+    } catch (initErr) {
+      showAlert(`Gagal menginisialisasi halaman login: ${initErr.message || initErr}`, true);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Local Read-Only SQL Reference Folders (Kronos Ledger base)
+acounting sql/
+accounting sql/
+
+# Legacy Non-Prefixed SQL Files (superseded by 16_att_*.sql .. 20_att_*.sql)
+schema.sql
+seed.sql
+supabase/schema.sql
+supabase/seed.sql
+
+# Temporary QA, Verification Scripts & Browser Screenshots
+check_sql_sync.py
+verify_vectra.mjs
+final_step_*.png
+qa_*.png
+screenshot*.png
+browser_evidence/
+*.log
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# OS, Editor & Tooling Junk
+.DS_Store
+Thumbs.db
+desktop.ini
+node_modules/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+.gemini/
+.vercel/
